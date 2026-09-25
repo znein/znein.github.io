@@ -34,7 +34,7 @@
             line-height: 0.8;
             color: #fff;
             text-shadow:
-                8px 8px 0 #d00,
+                8px 8px 0 #1e6fff,
                 16px 16px 0 #111;
             animation: nein 1.5s infinite alternate ease-in-out;
         }
@@ -54,14 +54,14 @@
         }
 
         .translation span {
-            color: #d00;
+            color: #1e6fff;
             font-weight: 700;
         }
 
         .button {
             margin-top: 50px;
             padding: 15px 35px;
-            border: 2px solid #d00;
+            border: 2px solid #1e6fff;
             background: transparent;
             color: #fff;
             font-size: 1rem;
@@ -71,7 +71,7 @@
         }
 
         .button:hover {
-            background: #d00;
+            background: #1e6fff;
             transform: scale(1.05);
         }
 
@@ -83,6 +83,58 @@
             color: #333;
             font-size: 0.75rem;
             letter-spacing: 0.15em;
+        }
+
+        .modal {
+            border: 2px solid #d00;
+            background: #111;
+            color: #fff;
+            padding: 40px 50px;
+            text-align: center;
+            max-width: min(90vw, 480px);
+            box-shadow: 8px 8px 0 #d00;
+        }
+
+        .modal::backdrop {
+            background: rgba(0, 0, 0, 0.75);
+        }
+
+        .modal[open] {
+            animation: slam 0.25s ease-out;
+        }
+
+        .modal-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #d00;
+            margin: 0;
+        }
+
+        .modal-message {
+            margin: 20px 0 0;
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .modal .button {
+            margin-top: 30px;
+            border-color: #d00;
+        }
+
+        .modal .button:hover {
+            background: #d00;
+        }
+
+        @keyframes slam {
+            from {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         @keyframes nein {
@@ -118,6 +170,14 @@
         ERROR 403 — REQUEST DENIED
     </div>
 
+    <dialog class="modal" id="neinModal" aria-labelledby="neinTitle">
+        <p class="modal-title" id="neinTitle">Request Denied</p>
+        <p class="modal-message" id="neinMessage"></p>
+        <form method="dialog">
+            <button class="button" autofocus>OK (still nein)</button>
+        </form>
+    </dialog>
+
     <script>
         function sayNein() {
             const responses = [
@@ -136,8 +196,17 @@
             const message =
                 responses[Math.floor(Math.random() * responses.length)];
 
-            alert(message);
+            document.getElementById("neinMessage").textContent = message;
+            document.getElementById("neinModal").showModal();
         }
+
+        // Close when clicking the backdrop
+        document.getElementById("neinModal").addEventListener("click", (e) => {
+            const r = e.currentTarget.getBoundingClientRect();
+            const outside = e.clientX < r.left || e.clientX > r.right ||
+                            e.clientY < r.top || e.clientY > r.bottom;
+            if (outside) e.currentTarget.close();
+        });
     </script>
 
 </body>
